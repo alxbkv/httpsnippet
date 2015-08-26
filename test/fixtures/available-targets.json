@@ -190,6 +190,12 @@
         "title": "Unirest",
         "link": "http://unirest.io/java.html",
         "description": "Lightweight HTTP Request Client Library"
+      },
+      {
+        "key": "restlet",
+        "title": "Restlet Framework",
+        "link": "http://restlet.com/products/restlet-framework/",
+        "description": "The most widely used open source solution for Java developers who want to create and use APIs"
       }
     ]
   },

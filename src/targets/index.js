@@ -22,7 +22,8 @@ module.exports = {
 		'index': require('./java/index.js'),
 		'info': require('./java/info.js'),
 		'okhttp': require('./java/okhttp.js'),
-		'unirest': require('./java/unirest.js')
+		'unirest': require('./java/unirest.js'),
+		'restlet': require('./java/restlet.js'),
 	},
 	'javascript': {
 		'index': require('./javascript/index.js'),
