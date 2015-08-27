@@ -18,12 +18,10 @@ function setAuthorization (code, authorization) {
 
 function setCookies (code, cookies) {
   if (cookies.length > 0) {
-    code.push('Series<Cookie> cookies = new Series<>(Cookie.class);')
-
     cookies.forEach(function (cookie) {
-      code.push('cookies.add(new Cookie("%s", "%s"));', cookie.name, cookie.value)
+      code.push('cr.getCookies().add(new Cookie("%s", "%s"));', cookie.name, cookie.value)
     })
-    code.push('cr.setCookies(cookies);')
+
   }
 }
 
@@ -109,8 +107,6 @@ module.exports = function (source, options) {
   code.push(2, 'System.out.println(representation.getText());')
   code.push('} catch (ResourceException e) {')
   code.push(2, 'System.err.println("Status: " + e.getStatus() + ". Response: " + cr.getResponse().getEntityAsText());')
-  code.push('} catch (IOException e) {')
-  code.push(2, 'e.printStackTrace();')
   code.push('}')
 
   return code.join()

@@ -11,6 +11,4 @@ try {
     System.out.println(representation.getText());
 } catch (ResourceException e) {
     System.err.println("Status: " + e.getStatus() + ". Response: " + cr.getResponse().getEntityAsText());
-} catch (IOException e) {
-    e.printStackTrace();
 }
