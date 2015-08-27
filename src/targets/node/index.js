@@ -1,8 +1,14 @@
 'use strict'
 
 module.exports = {
-	"info": require('./info.js'),
-	"native": require('./native.js'),
-	"request": require('./request.js'),
-	"unirest": require('./unirest.js')
+  info: {
+    key: 'node',
+    title: 'Node.js',
+    extname: '.js',
+    default: 'native'
+  },
+
+  native: require('./native'),
+  request: require('./request'),
+  unirest: require('./unirest')
 }

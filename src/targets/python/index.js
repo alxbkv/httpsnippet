@@ -1,7 +1,13 @@
 'use strict'
 
 module.exports = {
-	"info": require('./info.js'),
-	"python3": require('./python3.js'),
-	"requests": require('./requests.js')
+  info: {
+    key: 'python',
+    title: 'Python',
+    extname: '.py',
+    default: 'python3'
+  },
+
+  python3: require('./python3'),
+  requests: require('./requests')
 }

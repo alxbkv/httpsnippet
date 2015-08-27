@@ -1,7 +1,13 @@
 'use strict'
 
 module.exports = {
-	"info": require('./info.js'),
-	"jquery": require('./jquery.js'),
-	"xhr": require('./xhr.js')
+  info: {
+    key: 'javascript',
+    title: 'JavaScript',
+    extname: '.js',
+    default: 'xhr'
+  },
+
+  jquery: require('./jquery'),
+  xhr: require('./xhr')
 }

@@ -1,8 +1,14 @@
 'use strict'
 
 module.exports = {
-	"info": require('./info.js'),
-	"okhttp": require('./okhttp.js'),
-	"unirest": require('./unirest.js'),
-	"restlet": require('./restlet.js')
+  info: {
+    key: 'java',
+    title: 'Java',
+    extname: '.java',
+    default: 'unirest'
+  },
+
+  okhttp: require('./okhttp'),
+  unirest: require('./unirest'),
+  restlet: require('./restlet')
 }

@@ -1,7 +1,12 @@
 'use strict'
 
 module.exports = {
-	"info": require('./info.js'),
-	"cohttp": require('./cohttp.js')
-}
+  info: {
+    key: 'ocaml',
+    title: 'OCaml',
+    extname: '.ml',
+    default: 'cohttp'
+  },
 
+  cohttp: require('./cohttp')
+}

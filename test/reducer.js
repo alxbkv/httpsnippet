@@ -2,7 +2,7 @@
 
 'use strict'
 
-var helpers = require('../src/helpers')
+var reducer = require('../src/helpers/reducer')
 
 require('should')
 
@@ -13,7 +13,7 @@ describe('Reducer', function () {
       {name: 'foo', value: 'bar'}
     ]
 
-    var obj = query.reduce(helpers.reducer, {})
+    var obj = query.reduce(reducer, {})
 
     obj.should.be.an.Object
     obj.should.eql({key: 'value', foo: 'bar'})
@@ -28,7 +28,7 @@ describe('Reducer', function () {
       {name: 'foo', value: 'bar2'}
     ]
 
-    var obj = query.reduce(helpers.reducer, {})
+    var obj = query.reduce(reducer, {})
 
     obj.should.be.an.Object
     obj.should.eql({key: 'value', foo: ['bar1', 'bar2']})

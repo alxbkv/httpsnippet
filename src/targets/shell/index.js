@@ -1,8 +1,14 @@
 'use strict'
 
 module.exports = {
-	"info": require('./info.js'),
-	"curl": require('./curl.js'),
-	"httpie": require('./httpie.js'),
-	"wget": require('./wget.js')
+  info: {
+    key: 'shell',
+    title: 'Shell',
+    extname: '.sh',
+    default: 'curl'
+  },
+
+  curl: require('./curl'),
+  httpie: require('./httpie'),
+  wget: require('./wget')
 }

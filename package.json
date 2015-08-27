@@ -1,12 +1,12 @@
 {
   "version": "1.16.4",
-  "name": "httpsnippet-fsless",
+  "name": "httpsnippet",
   "description": "HTTP Request snippet generator for *most* languages without using node-fs",
   "author": "Nicolas Baptiste, nbaptiste-ext@restlet.com",
   "homepage": "https://github.com/restlet/httpsnippet",
   "license": "MIT",
-  "main": "./src/index.js",
-  "bin": "./bin/httpsnippet",
+  "main": "src/index.js",
+  "bin": "bin/httpsnippet",
   "keywords": [
     "api",
     "csharp",
@@ -49,9 +49,11 @@
     "url": "https://github.com/restlet/httpsnippet/issues"
   },
   "scripts": {
-    "test": "standard && mocha --no-timeouts --reporter spec --fgrep 'Request Validation' --invert",
-    "travis": "standard && mocha --no-timeouts --reporter spec",
-    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- --fgrep 'Request Validation' --invert",
+    "quick": "mocha --no-timeouts --fgrep 'Request Validation' --invert",
+    "pretest": "standard && echint",
+    "test": "mocha --no-timeouts",
+    "posttest": "npm run coverage",
+    "coverage": "istanbul cover --dir coverage _mocha -- --fgrep 'Request Validation' --invert -R dot",
     "codeclimate": "codeclimate < coverage/lcov.info"
   },
   "standard": {
@@ -75,8 +77,7 @@
     "commander": "^2.8.1",
     "debug": "^2.2.0",
     "event-stream": "^3.3.1",
-    "folderify": "^0.6.0",
     "form-data": "^1.0.0-rc3",
-    "har-validator-fsless": "^1.6.1"
+    "har-validator": "^1.8.0"
   }
 }

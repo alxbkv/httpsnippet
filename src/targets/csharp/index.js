@@ -1,6 +1,12 @@
 'use strict'
 
 module.exports = {
-	"info": require('./info.js'),
-	"restsharp": require('./restsharp.js')
+  info: {
+    key: 'csharp',
+    title: 'C#',
+    extname: '.cs',
+    default: 'restsharp'
+  },
+
+  restsharp: require('./restsharp')
 }

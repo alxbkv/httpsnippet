@@ -1,6 +1,12 @@
 'use strict'
 
 module.exports = {
-	"info": require('./info.js'),
-	"native": require('./native.js')
+  info: {
+    key: 'go',
+    title: 'Go',
+    extname: '.go',
+    default: 'native'
+  },
+
+  native: require('./native')
 }

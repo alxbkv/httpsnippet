@@ -55,7 +55,7 @@ module.exports = function (source, options) {
 
   code.blank()
       .push('xhr.addEventListener("readystatechange", function () {')
-      .push(1, 'if (this.readyState === 4) {')
+      .push(1, 'if (this.readyState === this.DONE) {')
       .push(2, 'console.log(this.responseText);')
       .push(1, '}')
       .push('});')
