@@ -49,19 +49,18 @@ var itShouldHaveRequestTestOutputFixture = function (request, target, path) {
   })
 }
 
-var itShouldGenerateOutput = function(request, path, target, client, advanced) {
+var itShouldGenerateOutput = function (request, path, target, client, advanced) {
   var fixture = path + request + HTTPSnippet.extname(target)
 
   it('should generate ' + request + ' snippet', function () {
     if (Object.keys(output).indexOf(fixture) === -1) {
       this.skip()
     }
+    var instance = new HTTPSnippet(fixtures.requests[request])
     if (advanced) {
-      var instance = new HTTPSnippet(fixtures['advanced-requests'][request])
-    }else {
-      var instance = new HTTPSnippet(fixtures.requests[request])
+      instance = new HTTPSnippet(fixtures['advanced-requests'][request])
     }
-    
+
     var result = instance.convert(target, client) + '\n'
 
     result.should.be.a.String
@@ -101,11 +100,10 @@ Object.keys(targets).forEach(function (target) {
             itShouldGenerateOutput(request, target + '/' + client + '/', target, client)
           })
           if (client === 'restlet') {
-
-            Object.keys(fixtures['advanced-requests']).forEach(function(request) {
+            Object.keys(fixtures['advanced-requests']).forEach(function (request) {
               itShouldHaveRequestTestOutputFixture(request, target, client + '/')
               itShouldGenerateOutput(request, target + '/' + client + '/', target, client, true)
-            });
+            })
 
           }
         })
