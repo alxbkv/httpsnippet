@@ -3,62 +3,18 @@
 var util = require('util')
 var CodeBuilder = require('../../helpers/code-builder')
 
-/**
- * This method only deals with Basic auth*
- * TODO: implement other types of authentication
- */
-function setAuthorization (code, authorization) {
-  if (authorization) {
-    code.push('ChallengeResponse credentials = new ChallengeResponse(ChallengeScheme.HTTP_BASIC);')
-    code.push(4, 'credentials')
-    code.push(8, '.setRawValue("%s");', authorization.replace('Basic ', ''))
-    code.push(4, 'cr.setChallengeResponse(credentials);')
-  }
-}
-
-function setCookies (code, cookies) {
-  if (cookies.length > 0) {
-    cookies.forEach(function (cookie) {
-      code.push('cr.getCookies().add(new Cookie("%s", "%s"));', cookie.name, cookie.value)
-    })
-
-  }
-}
-
-function setAccept (code, accept, mimeTypes) {
-  if (mimeTypes[accept]) {
-    code.push('cr.accept(' + mimeTypes[accept] + ');')
-  }
-}
-
-function setUnknownMethod (code, method) {
-  code.push(2, 'cr.getRequest().setMethod(new Method("%s"));', method.toUpperCase())
-  code.push(2, 'Representation representation = cr.handle();')
-}
-
-function setMethodWithPostData (code, method, postData, mimeTypes) {
-  if (postData.text) {
-    code.push(2, 'Representation representation = cr')
-    code.push(6, '.%s(new StringRepresentation(', method.toLowerCase())
-    code.push(10, '%s,', JSON.stringify(postData.text))
-
-    if (mimeTypes[postData.mimeType]) {
-      code.push(10, '%s));', mimeTypes[postData.mimeType])
-    } else {
-      code.push(10, 'MediaType.TEXT_PLAIN));')
-    }
-
-  } else {
-    code.push(2, 'Representation representation = cr.%s(null);', method.toLowerCase())
-  }
-
-}
-
-function isMethodWithPostData (method) {
-  return ['POST', 'PUT', 'PATCH'].indexOf(method.toUpperCase()) !== -1
-}
-
 module.exports = function (source, options) {
+  var service = {}
+
+  service.setAccept = setAccept
+  service.setAuthorization = setAuthorization
+  service.setCookies = setCookies
+
+  service.setUnknownMethod = setUnknownMethod
+  service.isUnknownMethod = isUnknownMethod
+  service.isMethodWithPostData = isMethodWithPostData
+  service.setMethodWithPostData = setMethodWithPostData
+
   var opts = util._extend({
     indent: '  '
   }, options)
@@ -68,11 +24,14 @@ module.exports = function (source, options) {
   var mimeTypes = {
     'application/json': 'MediaType.APPLICATION_JSON',
     'application/x-json': 'MediaType.APPLICATION_JSON',
+
     'application/xml': 'MediaType.APPLICATION_XML',
     'text/xml': 'MediaType.APPLICATION_XML',
+
     'application/yaml': 'MediaType.APPLICATION_YAML',
     'application/x-yaml': 'MediaType.APPLICATION_YAML',
     'text/yaml': 'MediaType.APPLICATION_YAML',
+
     'text/plain': 'MediaType.TEXT_PLAIN'
   }
 
@@ -83,20 +42,20 @@ module.exports = function (source, options) {
 
   code.push('ClientResource cr = new ClientResource("%s");', source.fullUrl)
 
-  setAccept(code, headers['accept'], mimeTypes)
+  service.setAccept(code, headers['accept'], mimeTypes)
 
-  setAuthorization(code, headers['authorization'])
+  service.setAuthorization(code, headers['authorization'])
 
-  setCookies(code, source['cookies'])
+  service.setCookies(code, source['cookies'])
 
   code.push('try {')
 
-  if (methods.indexOf(source.method.toUpperCase()) === -1) {
-    setUnknownMethod(code, source.method)
+  if (service.isUnknownMethod(source.method)) {
+    service.setUnknownMethod(code, source.method)
 
   } else {
-    if (isMethodWithPostData(source.method)) {
-      setMethodWithPostData(code, source.method, source.postData, mimeTypes)
+    if (service.isMethodWithPostData(source.method)) {
+      service.setMethodWithPostData(code, source.method, source.postData, mimeTypes)
 
     } else {
       code.push(2, 'Representation representation = cr.' + source.method.toLowerCase() + '();')
@@ -110,6 +69,61 @@ module.exports = function (source, options) {
   code.push('}')
 
   return code.join()
+
+  // TODO: implement other types of authentication
+  function setAuthorization (code, authorization) {
+    if (authorization) {
+      code.push('ChallengeResponse credentials = new ChallengeResponse(ChallengeScheme.HTTP_BASIC);')
+      code.push(4, 'credentials')
+      code.push(8, '.setRawValue("%s");', authorization.replace('Basic ', ''))
+      code.push(4, 'cr.setChallengeResponse(credentials);')
+    }
+  }
+
+  function setCookies (code, cookies) {
+    if (cookies.length > 0) {
+      cookies.forEach(function (cookie) {
+        code.push('cr.getCookies().add(new Cookie("%s", "%s"));', cookie.name, cookie.value)
+      })
+
+    }
+  }
+
+  function setAccept (code, accept, mimeTypes) {
+    if (mimeTypes[accept]) {
+      code.push('cr.accept(' + mimeTypes[accept] + ');')
+    }
+  }
+
+  function setUnknownMethod (code, method) {
+    code.push(2, 'cr.getRequest().setMethod(new Method("%s"));', method.toUpperCase())
+    code.push(2, 'Representation representation = cr.handle();')
+  }
+
+  function setMethodWithPostData (code, method, postData, mimeTypes) {
+    if (postData.text) {
+      code.push(2, 'Representation representation = cr')
+      code.push(6, '.%s(new StringRepresentation(', method.toLowerCase())
+      code.push(10, '%s,', JSON.stringify(postData.text))
+
+      if (mimeTypes[postData.mimeType]) {
+        code.push(10, '%s));', mimeTypes[postData.mimeType])
+      } else {
+        code.push(10, 'MediaType.TEXT_PLAIN));')
+      }
+
+    } else {
+      code.push(2, 'Representation representation = cr.%s(null);', method.toLowerCase())
+    }
+
+  }
+
+  function isMethodWithPostData (method) {
+    return ['POST', 'PUT', 'PATCH'].indexOf(method.toUpperCase()) !== -1
+  }
+  function isUnknownMethod (method) {
+    return methods.indexOf(method.toUpperCase()) === -1
+  }
 }
 
 module.exports.info = {
