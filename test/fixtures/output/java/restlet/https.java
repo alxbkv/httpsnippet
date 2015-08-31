@@ -1,3 +1,4 @@
+import org.restlet.resource.*;
 ClientResource cr = new ClientResource("https://mockbin.com/har");
 try {
     Representation representation = cr.get();

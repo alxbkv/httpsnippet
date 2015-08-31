@@ -1,3 +1,4 @@
+import org.restlet.resource.*;
 ClientResource cr = new ClientResource("http://mockbin.com/har");
 ChallengeResponse credentials = new ChallengeResponse(ChallengeScheme.HTTP_BASIC);
         credentials

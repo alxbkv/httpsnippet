@@ -1,3 +1,4 @@
+import org.restlet.resource.*;
 ClientResource cr = new ClientResource("http://mockbin.com/har");
 cr.getCookies().add(new Cookie("foo", "bar"));
 cr.getCookies().add(new Cookie("bar", "baz"));

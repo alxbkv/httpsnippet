@@ -40,6 +40,8 @@ module.exports = function (source, options) {
 
   var headers = source.allHeaders
 
+  code.push('import org.restlet.resource.*;')
+
   code.push('ClientResource cr = new ClientResource("%s");', source.fullUrl)
 
   service.setAccept(code, headers['accept'], mimeTypes)
