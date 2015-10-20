@@ -16,7 +16,8 @@ module.exports = function (source, options) {
   service.setMethodWithPostData = setMethodWithPostData
 
   var opts = util._extend({
-    indent: '  '
+    indent: '  ',
+    enableHeaders: true
   }, options)
 
   var code = new CodeBuilder(opts.indent)
@@ -36,7 +37,7 @@ module.exports = function (source, options) {
   }
 
   var methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD']
-  // var knownHeaders = ['accept', 'content-type', 'authorization']
+  var knownHeaders = ['accept', 'content-type', 'authorization', 'cookie']
 
   var headers = source.allHeaders
 
@@ -44,11 +45,24 @@ module.exports = function (source, options) {
 
   code.push('ClientResource cr = new ClientResource("%s");', source.fullUrl)
 
+
   service.setAccept(code, headers['accept'], mimeTypes)
 
   service.setAuthorization(code, headers['authorization'])
 
   service.setCookies(code, source['cookies'])
+
+  if (opts.enableHeaders && headers && Object.keys(headers).length > 0) {
+    var customHeaders = Object.keys(headers).filter(function (header) {
+      return knownHeaders.indexOf(header) < 0
+    })
+    if(customHeaders.length > 0) {
+      code.push('Series<Header> headers = cr.getHeaders();')
+      customHeaders.forEach(function (header) {
+        code.push('headers.set(%s, %s);', JSON.stringify(header), JSON.stringify(headers[header]))
+      })
+    }
+  }
 
   code.push('try {')
 
